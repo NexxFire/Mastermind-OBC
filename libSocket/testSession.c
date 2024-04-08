@@ -100,6 +100,9 @@ void dialogueSrv (socket_t sockDialogue) {
     char reponse[MAX_BUFF];
 
     // Envoi du message MSG au serveur : la réponse sera OK
+    char *buffer[MAX_BUFF];
+    serialize(&sockDialogue, buffer);
+    printf("Buffer [%s]\n", buffer);
     envoyer(&sockDialogue, &sockDialogue, serialize);
 
 

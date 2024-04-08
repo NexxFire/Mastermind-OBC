@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "stddef.h": "c",
+        "client.h": "c",
+        "init.h": "c",
+        "data.h": "c"
+    }
+}
