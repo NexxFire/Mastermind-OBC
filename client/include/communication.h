@@ -3,12 +3,6 @@
 
 //send a message to the server
 
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
 
 #define PATH_NAME_SERVER "/tmp/maSocketUNIXServer"
 

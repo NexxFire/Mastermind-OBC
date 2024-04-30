@@ -31,6 +31,7 @@ struct game
     socket_t socket;
 };
 
+
 typedef struct game game_t;
 
 
@@ -40,3 +41,5 @@ typedef struct game game_t;
 
 
 #endif
+
+
