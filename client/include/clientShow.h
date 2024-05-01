@@ -1,7 +1,9 @@
 #ifndef SHOW_H
 #define SHOW_H
 
-#include "clientData.h" // client/include/clientData.h
+#include "clientData.h" 
+#include <stdio.h> 
+
 
 #define ANSI_RESET_ALL          "\x1b[0m"
 

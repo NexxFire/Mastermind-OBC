@@ -1,4 +1,4 @@
-#include "init.h" // client/include/init.h
+#include "clientInit.h" // client/include/init.h
 
 
 void _initBoard(char board[MAX_ROUND][BOARD_WIDTH]) {

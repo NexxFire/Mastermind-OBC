@@ -1,7 +1,7 @@
 #ifndef CLIENTDATA_H
 #define CLIENTDATA_H
 
-#include "session.h"
+#include "socketSession.h"
 
 #define MAX_ROUND 12
 #define BOARD_WIDTH 4

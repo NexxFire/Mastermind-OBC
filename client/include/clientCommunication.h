@@ -1,6 +1,10 @@
 #ifndef COMMUNICATION_H
 #define COMMUNICATION_H
 
+#include "socketSession.h"
+#include "socketData.h"
+#include "clientData.h"
+
 //send a message to the server
 
 

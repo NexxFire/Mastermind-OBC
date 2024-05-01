@@ -2,9 +2,11 @@
 #define CLIENT_H
 
 
-#include "clientData.h" // client/include/clientData.h
-#include "init.h" // client/include/init.h
-#include "show.h" // client/include/show.h
+#include "clientData.h" 
+#include "clientInit.h" 
+#include "clientShow.h" 
+#include "clientCommunication.h" 
+#include "socketData.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

@@ -1,6 +1,4 @@
-#include "client.h" // client/include/client.h
-#include "communication.h" 
-#include "data.h"
+#include "client.h"
 
 int main() {
     //game structure
@@ -10,8 +8,8 @@ int main() {
     showGame(game); //show game
 
     while (1) {
-    _sendCombination(&game); //send combination to server
-    fetchOtherClientsData(&game); //fetch data from other clients
+        sendCombination(&game); //send combination to server
+        fetchOtherClientsData(&game); //fetch data from other clients
     }
 
     return 0;

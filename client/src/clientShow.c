@@ -1,5 +1,4 @@
-#include "show.h" // client/include/show.h
-#include <stdio.h> // printf
+#include "clientShow.h" // client/include/show.h
 
 void showGame(game_t game) {
     for (int i = 0; i < MAX_ROUND; i++) {

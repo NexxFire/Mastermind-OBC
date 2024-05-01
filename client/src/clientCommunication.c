@@ -1,6 +1,5 @@
-#include "communication.h"
-#include "session.h"
-#include "data.h"
+#include "clientCommunication.h"
+
 
 void connexionWithServer(game_t *game) {
 
