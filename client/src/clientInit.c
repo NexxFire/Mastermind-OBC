@@ -17,8 +17,8 @@ void _initResult(char result[MAX_ROUND][RESULT_WIDTH]) {
     }
 }
 
-void _initOtherPlayers(otherPlayer_t otherPlayers[MAX_PLAYERS]) {
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+void _initOtherPlayers(otherPlayer_t otherPlayers[MAX_PLAYERS-1]) {
+    for (int i = 0; i < MAX_PLAYERS-1; i++) {
         otherPlayers[i].nbRound = 0;
         otherPlayers[i].nbGoodPlace = 0;
         otherPlayers[i].nbGoodColor = 0;

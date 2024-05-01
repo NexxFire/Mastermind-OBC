@@ -1,33 +1,48 @@
-BUILD_INTERMEDIATE = build/intermediate
-BUILD_CLIENT = $(BUILD_INTERMEDIATE)/client
-BUILD_SERVER = $(BUILD_INTERMEDIATE)/server
+# Compiler options
+CC = gcc
+CFLAGS = -Wall -Wextra -Iclient/include -IlibSocket -Iserver/include -pthread
+LDFLAGS = -pthread
 
-CLIENT_SRC = client/src
-SERVER_SRC = server/src
+# Directories
+BUILD_DIR = build
+INTER_DIR = $(BUILD_DIR)/intermediate
+CLIENT_DIR = client
+SERVER_DIR = server
+LIBSOCKET_DIR = libSocket
 
-INCLUDE_CLIENT = client/include
-INCLUDE_SERVER = server/include
-CFLAGS = -Wall -Werror
+# Files
+CLIENT_SRCS = $(wildcard $(CLIENT_DIR)/src/*.c)
+CLIENT_OBJS = $(patsubst $(CLIENT_DIR)/src/%.c,$(INTER_DIR)/%.o,$(CLIENT_SRCS))
+SERVER_SRCS = $(wildcard $(SERVER_DIR)/*.c)
+SERVER_OBJS = $(patsubst $(SERVER_DIR)/%.c,$(INTER_DIR)/%.o,$(SERVER_SRCS))
+LIBSOCKET_SRCS = $(wildcard $(LIBSOCKET_DIR)/*.c)
+LIBSOCKET_OBJS = $(patsubst $(LIBSOCKET_DIR)/%.c,$(INTER_DIR)/%.o,$(LIBSOCKET_SRCS))
 
-all: client server
+# Executables
+CLIENT_EXECUTABLE = client
+SERVER_EXECUTABLE = server
 
-client: $(BUILD_CLIENT)/init.o $(BUILD_CLIENT)/show.o
-	mkdir -p $(BUILD_CLIENT)
-	gcc $(CFLAGS) -o build/$@ $(CLIENT_SRC)/client.c $^ -I $(INCLUDE_CLIENT)
+.PHONY: all clean client server
 
-$(BUILD_CLIENT)/init.o: $(CLIENT_SRC)/init.c | $(BUILD_CLIENT)
-	gcc $(CFLAGS) -o $@ -c $< -I $(INCLUDE_CLIENT)
+all: $(BUILD_DIR) client server
 
-$(BUILD_CLIENT)/show.o: $(CLIENT_SRC)/show.c | $(BUILD_CLIENT)
-	gcc $(CFLAGS) -o $@ -c $< -I $(INCLUDE_CLIENT)
+$(BUILD_DIR):
+	mkdir -p $(BUILD_DIR)
 
-server: 
-	# TODO: Implement server build
+client: $(CLIENT_OBJS) $(LIBSOCKET_OBJS)
+	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $(BUILD_DIR)/$@
 
-$(BUILD_CLIENT) $(BUILD_SERVER):
-	mkdir -p $@
+server: $(SERVER_OBJS) $(LIBSOCKET_OBJS)
+	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $(BUILD_DIR)/$@
+
+$(INTER_DIR)/%.o: $(CLIENT_DIR)/src/%.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(INTER_DIR)/%.o: $(SERVER_DIR)/src/%.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(INTER_DIR)/%.o: $(LIBSOCKET_DIR)/%.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -rf build/*
-
-.PHONY: all client server clean # This is to avoid conflicts with files named all, client, server, clean
+	rm -rf $(BUILD_DIR)
