@@ -10,6 +10,7 @@
 struct listenningThreadHandlerArgs {
     gameData_t *gameData;
     pthread_t *threadClients;
+    int *gameStarted;
 };
 typedef struct listenningThreadHandlerArgs listenningThreadHandlerArgs_t;
 

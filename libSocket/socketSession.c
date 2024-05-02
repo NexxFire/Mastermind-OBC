@@ -29,6 +29,8 @@ socket_t creerSocket (int mode) {
     socket_t sock;
     CHECK(sock.fd = socket(AF_INET, mode, 0), "Erreur lors de la création de la socket");
     sock.mode = mode;
+    int true = 1;
+    setsockopt(sock.fd,SOL_SOCKET,SO_REUSEADDR,&true,sizeof(int));
     return sock;
 }
 
@@ -57,6 +59,7 @@ socket_t creerSocketAdr (int mode, char *adrIP, short port) {
  */
 socket_t creerSocketEcoute (char *adrIP, short port) {
     socket_t sockEcoute = creerSocketAdr(SOCK_STREAM, adrIP, port);
+    
     CHECK(listen(sockEcoute.fd, 5), "Erreur lors de la mise en écoute de la socket");
     return sockEcoute;
 }

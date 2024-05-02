@@ -8,12 +8,17 @@
 #define RESULT_WIDTH 2
 #define MAX_PLAYERS 4
 #define EMPTY -1
+#define EMPTY_SCORE -2
 #define RED 'R'
 #define GREEN 'G'
 #define BLUE 'B'
 #define YELLOW 'Y'
 #define CYAN 'C'
 #define MAGENTA 'M'
+
+#define LOG_LEVEL 1
+#define LOG(level, fmt, ...) if (level <= LOG_LEVEL) fprintf(stdout, fmt, ##__VA_ARGS__)
+
 
 struct otherPlayer
 {

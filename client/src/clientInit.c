@@ -12,7 +12,7 @@ void _initBoard(char board[MAX_ROUND][BOARD_WIDTH]) {
 void _initResult(char result[MAX_ROUND][RESULT_WIDTH]) {
     for (int i = 0; i < MAX_ROUND; i++) {
         for (int j = 0; j < RESULT_WIDTH; j++) {
-            result[i][j] = EMPTY;
+            result[i][j] = EMPTY_SCORE;
         }
     }
 }

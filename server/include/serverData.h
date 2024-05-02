@@ -10,6 +10,7 @@
 #define RESULT_WIDTH 2
 #define MAX_PLAYERS 4
 #define EMPTY -1
+#define EMPTY_SCORE -2
 #define RED 'R'
 #define GREEN 'G'
 #define BLUE 'B'
@@ -21,6 +22,8 @@
 #define SERVER_IP "0.0.0.0"
 #define SERVER_PORT 58392
 
+#define LOG_LEVEL 1
+#define LOG(level, fmt, ...) if (level <= LOG_LEVEL) fprintf(stdout, fmt, ##__VA_ARGS__)
 
 struct player
 {

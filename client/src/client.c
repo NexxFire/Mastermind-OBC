@@ -3,8 +3,8 @@
 int main() {
     game_t game;
     showMenu();
-    connexionWithServer(&game);
     initGame(&game);
+    connexionWithServer(&game);
     showGame(game); 
 
     while (!isGameOver(game)){
@@ -13,6 +13,7 @@ int main() {
         fetchOtherClientsData(&game);
         showGame(game); //show game
         game.nbRound++;
+        printf("nbRound: %d\n", game.nbRound);
     }
     endGame(game); //end game
 
@@ -22,13 +23,17 @@ int main() {
 void sendCombination(game_t *game) {
 
     char colors[] = "RGBCYM"; // Possible colors
-    char playerCombination[BOARD_WIDTH + 1];
+    char playerCombination[BOARD_WIDTH + 2];
     int validCombination = 0;
-
+    int c;
     do {
         validCombination = 1;
         printf("Player, enter your guess, possible colors are R, G, B, C, Y, and M > ");
-        fgets(playerCombination, BOARD_WIDTH + 1, stdin);
+        fgets(playerCombination, BOARD_WIDTH + 2, stdin);
+        if (strlen(playerCombination) > 5) {
+            while ((c = getchar()) != '\n' && c != EOF);
+        }
+        playerCombination[strlen(playerCombination) - 1] = '\0';
         for (int i = 0; i < BOARD_WIDTH; i++) {
             playerCombination[i] = toupper(playerCombination[i]);
         }
@@ -54,17 +59,19 @@ void sendCombination(game_t *game) {
 }
 
 void getResult(game_t *game) {
-    char buffer[RESULT_WIDTH + 1];
-    recevoir(&(game->socket), buffer, NULL);
+    char buffer[RESULT_WIDTH + 1] = {0};
+    recevoir(&(game->socket), &buffer, NULL);
     for (int i = 0; i < RESULT_WIDTH; i++) {
         game->result[game->nbRound][i] = buffer[i];
     }
+    printf("good place: %d\n", game->result[game->nbRound][0]);
+    printf("good color: %d\n", game->result[game->nbRound][1]);
 }
 
 void fetchOtherClientsData(game_t *game) {
     char buffer[RESULT_WIDTH + 2];
     for (int i = 0; i < game->nbPlayers - 1; i++) {
-        recevoir(&(game->socket), buffer, NULL);
+        recevoir(&(game->socket), &buffer, NULL);
         game->otherPlayers[i].nbGoodPlace = buffer[0];
         game->otherPlayers[i].nbGoodColor = buffer[1];
         game->otherPlayers[i].nbRound = buffer[2];
@@ -72,7 +79,7 @@ void fetchOtherClientsData(game_t *game) {
 }
 
 int isGameOver(game_t game) {
-    if (game.result[game.nbRound][0] == BOARD_WIDTH) {
+    if (game.result[game.nbRound - 1][0] == BOARD_WIDTH) {
         return 1;
     } else if (game.nbRound == MAX_ROUND) {
         return 1;
@@ -92,7 +99,7 @@ void endGame(game_t game) {
     if (game.nbRound == MAX_ROUND) {
         printf("Waiting for other players to finish the game...\n");
     }
-    recevoir(&(game.socket), buffer, NULL);
+    recevoir(&(game.socket), &buffer, NULL);
     if (strcmp(buffer, "win") == 0) {
         printf("Congratulations! You won the game!\n");
     } else {
@@ -103,7 +110,7 @@ void endGame(game_t game) {
             printf("Sorry, you lost the game. The winner is player %d.\n", winner);
         }
     }
-    recevoir(&(game.socket), buffer, NULL);
+    recevoir(&(game.socket), &buffer, NULL);
     printf("The secret combination was %s.\n", buffer);
 }
 

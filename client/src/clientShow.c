@@ -33,7 +33,7 @@ void showGame(game_t game) {
         }
     }
     printf("└───┴─────────────┴───┘\n");
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (int i = 0; i < game.nbPlayers -1; i++) {
         printf("Player %d\n", i);
         printf("Round: %d\n", game.otherPlayers[i].nbRound);
         printf("Good place: %d\n", game.otherPlayers[i].nbGoodPlace);
@@ -61,7 +61,7 @@ void showChar(char c) {
     else if (c == 'M') {
         printf(ANSI_BACKGROUND_MAGENTA"  "ANSI_RESET_ALL);
     }
-    else if (c == EMPTY_CASE) {
+    else if (c == EMPTY) {
         printf(ANSI_BACKGROUND_WHITE"  "ANSI_RESET_ALL);
     }
     else if (c == EMPTY_SCORE) {
