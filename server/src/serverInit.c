@@ -2,6 +2,7 @@
 
 void serverInit(gameData_t *gameData) {
     gameData->playerList.nbPlayers = 0;
+    gameData->gameWinner = EMPTY;
     for (int i = 0; i < MAX_PLAYERS; i++) {
         _playerInit(&gameData->playerList.players[i]);
     }
@@ -14,6 +15,7 @@ void serverInit(gameData_t *gameData) {
 
 void _playerInit(player_t *player) {
     player->ready = 0;
+    player->nbRound = 0;
     for (int i = 0; i < MAX_ROUND; i++) {
         for (int j = 0; j < BOARD_WIDTH; j++) {
             player->board[i][j] = EMPTY;

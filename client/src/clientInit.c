@@ -28,6 +28,8 @@ void _initOtherPlayers(otherPlayer_t otherPlayers[MAX_PLAYERS-1]) {
 
 
 void initGame(game_t *game) {
+    game->nbPlayers = 0;
+    game->nbRound = 0;
     _initBoard(game->board);
     _initResult(game->result);
     _initOtherPlayers(game->otherPlayers);

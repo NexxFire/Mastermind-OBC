@@ -7,12 +7,16 @@
 #include <pthread.h>
 #include <unistd.h>
 
-struct threadListenningArgs {
+struct listenningThreadHandlerArgs {
     gameData_t *gameData;
     pthread_t *threadClients;
 };
-typedef struct threadListenningArgs threadListenningArgs_t;
+typedef struct listenningThreadHandlerArgs listenningThreadHandlerArgs_t;
 
 void clientRegistration(gameData_t *gameData);
+void getPlayerChoice(gameData_t *gameData, int playerIndex);
+void sendResult(gameData_t *gameData, int playerIndex);
+void *_listenningThreadHandler(void *args);
+void *_clientReadyThreadHandler(void *args);
 
 #endif

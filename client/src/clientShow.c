@@ -1,5 +1,14 @@
 #include "clientShow.h" // client/include/show.h
 
+void showMenu() {
+    printf("Welcome to the Mastermind contest\n");
+    printf("This is a Mastermind game with multiple players.\n");
+    printf("You have to guess a color combination. The possible colors are R, G, B, C, Y, and M.\n");
+    printf("You have %d rounds to find the combination.\n", MAX_ROUND);
+    printf("The first to find the combination win. Good luck!\n\n");
+}
+
+
 void showGame(game_t game) {
     for (int i = 0; i < MAX_ROUND; i++) {
         for (int j = 0; j < BOARD_WIDTH; j++) {

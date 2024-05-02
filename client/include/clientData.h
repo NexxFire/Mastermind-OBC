@@ -28,9 +28,9 @@ struct game
 {
     char board[MAX_ROUND][BOARD_WIDTH];
     char result[MAX_ROUND][RESULT_WIDTH];
+    int nbRound;
     otherPlayer_t otherPlayers[MAX_PLAYERS -1];
     int nbPlayers;
-    int gameFinished;
     socket_t socket;
 };
 typedef struct game game_t;
