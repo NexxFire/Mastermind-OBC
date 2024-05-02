@@ -1,7 +1,9 @@
 #ifndef SHOW_H
 #define SHOW_H
 
-#include "data.h" // client/include/data.h
+#include "clientData.h" 
+#include <stdio.h> 
+
 
 #define ANSI_RESET_ALL          "\x1b[0m"
 
@@ -27,6 +29,7 @@
 #define ANSI_STYLE_ITALIC       "\x1b[3m"
 #define ANSI_STYLE_UNDERLINE    "\x1b[4m"
 
+void showMenu();
 void showGame(game_t game);
 void showChar(char c);
 

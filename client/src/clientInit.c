@@ -1,4 +1,4 @@
-#include "init.h" // client/include/init.h
+#include "clientInit.h" // client/include/init.h
 
 
 void _initBoard(char board[MAX_ROUND][BOARD_WIDTH]) {
@@ -17,8 +17,8 @@ void _initResult(char result[MAX_ROUND][RESULT_WIDTH]) {
     }
 }
 
-void _initOtherPlayers(otherPlayer_t otherPlayers[MAX_PLAYERS]) {
-    for (int i = 0; i < MAX_PLAYERS; i++) {
+void _initOtherPlayers(otherPlayer_t otherPlayers[MAX_PLAYERS-1]) {
+    for (int i = 0; i < MAX_PLAYERS-1; i++) {
         otherPlayers[i].nbRound = 0;
         otherPlayers[i].nbGoodPlace = 0;
         otherPlayers[i].nbGoodColor = 0;
@@ -28,6 +28,8 @@ void _initOtherPlayers(otherPlayer_t otherPlayers[MAX_PLAYERS]) {
 
 
 void initGame(game_t *game) {
+    game->nbPlayers = 0;
+    game->nbRound = 0;
     _initBoard(game->board);
     _initResult(game->result);
     _initOtherPlayers(game->otherPlayers);

@@ -1,7 +1,7 @@
 #ifndef CLIENTDATA_H
 #define CLIENTDATA_H
 
-#include <stddef.h>
+#include "socketSession.h"
 
 #define MAX_ROUND 12
 #define BOARD_WIDTH 4
@@ -23,18 +23,19 @@ struct otherPlayer
 };
 typedef struct otherPlayer otherPlayer_t;
 
+
 struct game
 {
     char board[MAX_ROUND][BOARD_WIDTH];
     char result[MAX_ROUND][RESULT_WIDTH];
-    otherPlayer_t otherPlayers[MAX_PLAYERS];
+    int nbRound;
+    otherPlayer_t otherPlayers[MAX_PLAYERS -1];
+    int nbPlayers;
+    socket_t socket;
 };
 typedef struct game game_t;
 
 
-
-
-
-
-
 #endif
+
+
