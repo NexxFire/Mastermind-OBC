@@ -16,11 +16,9 @@ int main() {
 void createCombinations(gameData_t *gameData) {
     LOG(1, "Creating secret code...\n");
     char * colors = "RGBCYM";
-    char * secretStatic = "BYRM";
     srand(time(NULL));
     for (int i = 0; i < BOARD_WIDTH; i++) {
-        //gameData->secretCode[i] = colors[rand() % strlen(colors)];
-        gameData->secretCode[i] = secretStatic[i];
+        gameData->secretCode[i] = colors[rand() % strlen(colors)];
     }
     LOG(1, "Secret code created.\n");
     LOG(1, "Secret code : ");
@@ -53,7 +51,6 @@ void startGame(gameData_t *gameData) {
 
 void checkChoice(gameData_t *gameData, int playerIndex) {
     LOG(1, "Checking player %d choice...\n", playerIndex);
-    player_t *player = &gameData->playerList.players[playerIndex];
     char colors[6] = "RBGCYM";
     int nbcolorsCombination[6] = {0};
     int nbcolorsPlayer[6] = {0};
@@ -62,26 +59,26 @@ void checkChoice(gameData_t *gameData, int playerIndex) {
             if (gameData->secretCode[i] == colors[j]) {
                 nbcolorsCombination[j]++;
             }
-            if (player->board[player->nbRound][i] == colors[j]) {
+            if (gameData->playerList.players[playerIndex].board[gameData->playerList.players[playerIndex].nbRound][i] == colors[j]) {
                 nbcolorsPlayer[j]++;
             }
         }
-        if (player->board[player->nbRound][i] == gameData->secretCode[i]) {
-            player->result[player->nbRound][0]++;
-            LOG(1, "Player %d color %c is at the right place.\n", playerIndex, player->board[player->nbRound][i]);
-            LOG(1, "Player %d right place : %d.\n", playerIndex, player->result[player->nbRound][0]);
+        if (gameData->playerList.players[playerIndex].board[gameData->playerList.players[playerIndex].nbRound][i] == gameData->secretCode[i]) {
+            gameData->playerList.players[playerIndex].result[gameData->playerList.players[playerIndex].nbRound][0]++;
+            LOG(1, "Player %d color %c is at the right place.\n", playerIndex, gameData->playerList.players[playerIndex].board[gameData->playerList.players[playerIndex].nbRound][i]);
+            LOG(1, "Player %d right place : %d.\n", playerIndex, gameData->playerList.players[playerIndex].result[gameData->playerList.players[playerIndex].nbRound][0]);
         }
     }
     for (int i = 0; i < 6; i++) {
-        player->result[player->nbRound][1] += MIN(nbcolorsCombination[i], nbcolorsPlayer[i]);
-        LOG(1, "Player %d right color : %d.\n", playerIndex, player->result[player->nbRound][1]);
+        gameData->playerList.players[playerIndex].result[gameData->playerList.players[playerIndex].nbRound][1] += MIN(nbcolorsCombination[i], nbcolorsPlayer[i]);
+        LOG(1, "Player %d right color : %d.\n", playerIndex, gameData->playerList.players[playerIndex].result[gameData->playerList.players[playerIndex].nbRound][1]);
     }
-    player->result[player->nbRound][1] -= player->result[player->nbRound][0];
-    if (player->result[player->nbRound][0] == BOARD_WIDTH) {
+    gameData->playerList.players[playerIndex].result[gameData->playerList.players[playerIndex].nbRound][1] -= gameData->playerList.players[playerIndex].result[gameData->playerList.players[playerIndex].nbRound][0];
+    if (gameData->playerList.players[playerIndex].result[gameData->playerList.players[playerIndex].nbRound][0] == BOARD_WIDTH && gameData->gameWinner == EMPTY) {
         gameData->gameWinner = playerIndex;
     }
     LOG(1, "Player %d choice checked.\n", playerIndex);
-    LOG(1, "Player %d result : %d good place and %d good color.\n", playerIndex, player->result[player->nbRound][0], player->result[player->nbRound][1]);
+    LOG(1, "Player %d result : %d good place and %d good color.\n", playerIndex, gameData->playerList.players[playerIndex].result[gameData->playerList.players[playerIndex].nbRound][0], gameData->playerList.players[playerIndex].result[gameData->playerList.players[playerIndex].nbRound][1]);
 }
 
 void endGame(gameData_t *gameData) {
@@ -107,10 +104,6 @@ void *clientThreadHandler(void *args) {
     while (clientThreadHandlerArgs->gameData->playerList.players[clientThreadHandlerArgs->playerIndex].nbRound < MAX_ROUND && clientThreadHandlerArgs->gameData->gameWinner == EMPTY) {
         getPlayerChoice(clientThreadHandlerArgs->gameData, clientThreadHandlerArgs->playerIndex);
         checkChoice(clientThreadHandlerArgs->gameData, clientThreadHandlerArgs->playerIndex);
-        for (int i = 0; i < clientThreadHandlerArgs->gameData->playerList.nbPlayers; i++) {
-            printf("result : %d %d\n", clientThreadHandlerArgs->gameData->playerList.players[i].result[clientThreadHandlerArgs->gameData->playerList.players[i].nbRound][0], clientThreadHandlerArgs->gameData->playerList.players[i].result[clientThreadHandlerArgs->gameData->playerList.players[i].nbRound][1]);
-            printf("round : %d\n", clientThreadHandlerArgs->gameData->playerList.players[i].nbRound);
-        }
         sendResult(clientThreadHandlerArgs->gameData, clientThreadHandlerArgs->playerIndex);
         clientThreadHandlerArgs->gameData->playerList.players[clientThreadHandlerArgs->playerIndex].nbRound++;
     }

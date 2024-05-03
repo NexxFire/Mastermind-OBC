@@ -11,6 +11,8 @@
 
 
 void connexionWithServer(game_t *game);
+void getResult(game_t *game);
+void fetchOtherClientsData(game_t *game);
 
 
 

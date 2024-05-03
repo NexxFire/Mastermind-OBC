@@ -15,6 +15,12 @@ struct listenningThreadHandlerArgs {
 };
 typedef struct listenningThreadHandlerArgs listenningThreadHandlerArgs_t;
 
+struct clientReadyThreadHandlerArgs {
+    gameData_t *gameData;
+    int playerIndex;
+};
+typedef struct clientReadyThreadHandlerArgs clientReadyThreadHandlerArgs_t;
+
 void clientRegistration(gameData_t *gameData);
 void getPlayerChoice(gameData_t *gameData, int playerIndex);
 void sendResult(gameData_t *gameData, int playerIndex);

@@ -13,7 +13,6 @@ int main() {
         fetchOtherClientsData(&game);
         showGame(game); //show game
         game.nbRound++;
-        printf("nbRound: %d\n", game.nbRound);
     }
     endGame(game); //end game
 
@@ -51,26 +50,7 @@ void sendCombination(game_t *game) {
     sendData(&(game->socket), playerCombination, 3);
 }
 
-void getResult(game_t *game) {
-    char buffer[RESULT_WIDTH + 1] = {0};
-    receiveData(&(game->socket), buffer, 4);
-    for (int i = 0; i < RESULT_WIDTH; i++) {
-        game->result[game->nbRound][i] = buffer[i] - '0';
-    }
-    printf("good place: %d\n", game->result[game->nbRound][0]);
-    printf("good color: %d\n", game->result[game->nbRound][1]);
-}
 
-void fetchOtherClientsData(game_t *game) {
-    char buffer[RESULT_WIDTH + 2];
-    for (int i = 0; i < game->nbPlayers - 1; i++) {
-        receiveData(&(game->socket), buffer, 5);
-        printf("Player %d: good place: %c, good color: %c, round: %d\n", i + 1, buffer[0], buffer[1], buffer[2] - '0');
-        game->otherPlayers[i].nbGoodPlace = buffer[0] - '0';
-        game->otherPlayers[i].nbGoodColor = buffer[1] - '0';
-        game->otherPlayers[i].nbRound = buffer[2] - '0';
-    }
-}
 
 int isGameOver(game_t game) {
     if (game.result[game.nbRound - 1][0] == BOARD_WIDTH) {
@@ -93,6 +73,7 @@ void endGame(game_t game) {
     if (game.nbRound == MAX_ROUND) {
         printf("Waiting for other players to finish the game...\n");
     }
+    printf("Waiting for other players to finish their round...\n");
     receiveData(&(game.socket), buffer, 6);
     if (strcmp(buffer, "win") == 0) {
         printf("Congratulations! You won the game!\n");
@@ -101,7 +82,7 @@ void endGame(game_t game) {
         if (winner == EMPTY) {
             printf("Sorry, you lost the game. Nobody found the secret combination.\n");
         } else {
-            printf("Sorry, you lost the game. The winner is player %d.\n", winner);
+            printf("Sorry, you lost the game. The winner is player %d.\n", winner+1);
         }
     }
     receiveData(&(game.socket), buffer, 7);

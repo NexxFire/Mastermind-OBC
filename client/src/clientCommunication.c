@@ -34,9 +34,31 @@ void connexionWithServer(game_t *game) {
     printf("Waiting for other players to be ready...\n");
     receiveData(&(game->socket), buffer, 2);
     game->nbPlayers = buffer[0];
-    printf("There are %d players in the game\n", game->nbPlayers);
+    printf("\nThere are %d players in the game\n", game->nbPlayers);
+    receiveData(&(game->socket), buffer, 8);
+    game->playerIndex = buffer[0];
+    printf("You are player %d\n", game->playerIndex +1);
     printf("Game is starting...\n");
     
+}
+
+
+void getResult(game_t *game) {
+    char buffer[RESULT_WIDTH + 1] = {0};
+    receiveData(&(game->socket), buffer, 4);
+    for (int i = 0; i < RESULT_WIDTH; i++) {
+        game->result[game->nbRound][i] = buffer[i] - '0';
+    }
+}
+
+void fetchOtherClientsData(game_t *game) {
+    char buffer[RESULT_WIDTH + 2];
+    for (int i = 0; i < game->nbPlayers - 1; i++) {
+        receiveData(&(game->socket), buffer, 5);
+        game->otherPlayers[i].nbGoodPlace = buffer[0] - '0';
+        game->otherPlayers[i].nbGoodColor = buffer[1] - '0';
+        game->otherPlayers[i].nbRound = buffer[2] - '0';
+    }
 }
 
 

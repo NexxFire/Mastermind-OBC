@@ -36,6 +36,7 @@ struct game
     int nbRound;
     otherPlayer_t otherPlayers[MAX_PLAYERS -1];
     int nbPlayers;
+    int playerIndex;
     socket_t socket;
 };
 typedef struct game game_t;

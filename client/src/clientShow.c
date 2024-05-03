@@ -10,6 +10,8 @@ void showMenu() {
 
 
 void showGame(game_t game) {
+
+    printf("\n\n\n\tPlayer %d\n", game.playerIndex+1);
     printf("┌───┬─────────────┬───┐\n");
     for (int i = 0; i < MAX_ROUND; i++) {
         printf("│");
@@ -33,12 +35,16 @@ void showGame(game_t game) {
         }
     }
     printf("└───┴─────────────┴───┘\n");
-    for (int i = 0; i < game.nbPlayers -1; i++) {
-        printf("Player %d\n", i);
-        printf("Round: %d\n", game.otherPlayers[i].nbRound);
-        printf("Good place: %d\n", game.otherPlayers[i].nbGoodPlace);
-        printf("Good color: %d\n", game.otherPlayers[i].nbGoodColor);
-        printf("\n");
+    printf("\tRound: %d\n\n", game.nbRound);
+    for (int i = 0, j = 0; i < game.nbPlayers; i++) {
+        if (game.playerIndex != i) {
+            printf("Player %d\n", i+1);
+            printf("\tRound: %d\n", game.otherPlayers[j].nbRound);
+            printf(ANSI_COLOR_GREEN"\tGood place: %d\n"ANSI_RESET_ALL, game.otherPlayers[j].nbGoodPlace);
+            printf(ANSI_COLOR_YELLOW"\tGood color: %d\n\n"ANSI_RESET_ALL, game.otherPlayers[j].nbGoodColor);
+            printf("\n");
+            j++;
+        }
     }
 }
 

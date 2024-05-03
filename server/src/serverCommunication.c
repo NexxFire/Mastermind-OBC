@@ -32,42 +32,50 @@ void clientRegistration(gameData_t *gameData) {
     LOG(1, "All players are ready.\n");
     buffer[0] = gameData->playerList.nbPlayers;
     buffer[1] = '\0';
+    buffer[3] = '\0';
     for (int i = 0; i < gameData->playerList.nbPlayers; i++) {
         sendData(&gameData->playerList.players[i].socket, buffer, 2);
+        buffer[2] = i;
+        sendData(&gameData->playerList.players[i].socket, buffer+2, 8);
     }
 }
 
 
 void getPlayerChoice(gameData_t *gameData, int playerIndex) {
+    gameData->playerList.players[playerIndex].board[MAX_ROUND-1][0] = 16;
     LOG(1, "Waiting for player %d to send his choice...\n", playerIndex);
-    player_t *player = &gameData->playerList.players[playerIndex];
-    receiveData(&player->socket, player->board[player->nbRound], 3);
-    LOG(1, "Player %d sent his choice :%s\n", playerIndex, player->board[player->nbRound]);
+    receiveData(&gameData->playerList.players[playerIndex].socket, gameData->playerList.players[playerIndex].board[gameData->playerList.players[playerIndex].nbRound], 3);
+    LOG(1, "Player %d sent his choice :%s\n", playerIndex, gameData->playerList.players[playerIndex].board[gameData->playerList.players[playerIndex].nbRound]);
 }
 
 void sendResult(gameData_t *gameData, int playerIndex) {
     LOG(1, "Sending result to player %d...\n", playerIndex);
     //send result to the player and send other player result to the player
     char buffer[RESULT_WIDTH+2];
-    player_t *player = &gameData->playerList.players[playerIndex];
     
     for (int i = 0; i < RESULT_WIDTH; i++) {
-        buffer[i] = player->result[player->nbRound][i]+'0';
+        buffer[i] = gameData->playerList.players[playerIndex].result[gameData->playerList.players[playerIndex].nbRound][i]+'0';
     }
     buffer[RESULT_WIDTH] = '\0';
-    sendData(&player->socket, buffer, 4);
+    sendData(&gameData->playerList.players[playerIndex].socket, buffer, 4);
     LOG(1, "Result sent to player %d : good place %c, good color %c\n", playerIndex, buffer[0], buffer[1]);
     LOG(1, "Sending other players result to player %d...\n", playerIndex);
     for (int i = 0; i < gameData->playerList.nbPlayers; i++) {
         if (i != playerIndex) {
-            for (int j = 0; j < RESULT_WIDTH; j++) {
-                printf("Player %d result: %d\n", i, gameData->playerList.players[i].result[gameData->playerList.players[i].nbRound][j]);
-                buffer[j] = gameData->playerList.players[i].result[gameData->playerList.players[i].nbRound][j]+'0';
+            if (gameData->playerList.players[i].nbRound == 0) {
+                buffer[0] = '0';
+                buffer[1] = '0';
+                buffer[2] = '0';
+                buffer[3] = '\0';
+                sendData(&gameData->playerList.players[playerIndex].socket, buffer, 5);
+            } else {
+                for (int j = 0; j < RESULT_WIDTH; j++) {
+                    buffer[j] = gameData->playerList.players[i].result[gameData->playerList.players[i].nbRound-1][j]+'0';
+                }
+                buffer[RESULT_WIDTH] = gameData->playerList.players[i].nbRound+'0';
+                buffer[RESULT_WIDTH+1] = '\0';
+                sendData(&gameData->playerList.players[playerIndex].socket, buffer, 5);
             }
-            buffer[RESULT_WIDTH] = gameData->playerList.players[i].nbRound+'0';
-            buffer[RESULT_WIDTH+1] = '\0';
-            printf("Sending: %s\n", buffer);
-            sendData(&player->socket, buffer, 5);
         }
     }
     LOG(1, "Other players result sent to player %d.\n", playerIndex);
@@ -89,12 +97,16 @@ void *_listenningThreadHandler(void *args) {
             LOG(1, "Stop listening\n");
             break;
         }
+        clientReadyThreadHandlerArgs_t clientReadyThreadHandlerArgs;
+        clientReadyThreadHandlerArgs.gameData = listenningThreadHandlerArgs->gameData;
+        clientReadyThreadHandlerArgs.playerIndex = listenningThreadHandlerArgs->gameData->playerList.nbPlayers;
         pthread_create(&listenningThreadHandlerArgs->threadClients[listenningThreadHandlerArgs->gameData->playerList.nbPlayers], 
                         NULL, 
                         _clientReadyThreadHandler, 
-                        &listenningThreadHandlerArgs->gameData->playerList.players[listenningThreadHandlerArgs->gameData->playerList.nbPlayers]);
-        listenningThreadHandlerArgs->gameData->playerList.nbPlayers++;
+                        &clientReadyThreadHandlerArgs);
         LOG(1, "Player %d connected.\n", listenningThreadHandlerArgs->gameData->playerList.nbPlayers);
+        listenningThreadHandlerArgs->gameData->playerList.nbPlayers++;
+
     }
     LOG(1, "All players are connected.\n");
     shutdown(serverListenningSocket.fd, SHUT_RDWR);
@@ -104,17 +116,16 @@ void *_listenningThreadHandler(void *args) {
 
 
 void *_clientReadyThreadHandler(void *args) {
-    LOG(1, "%s\n", "Waiting for player to be ready...");
-    player_t *player = (player_t *)args;
+    clientReadyThreadHandlerArgs_t *clientReadyThreadHandlerArgs = (clientReadyThreadHandlerArgs_t *) args;
+    LOG(1, "Waiting for player %d to be ready...\n", clientReadyThreadHandlerArgs->playerIndex);
     char buffer[1024];
-    while (!player->ready) {
-        receiveData(&player->socket, buffer, 1);
-        printf("Received: %s\n", buffer);
+    while (!clientReadyThreadHandlerArgs->gameData->playerList.players[clientReadyThreadHandlerArgs->playerIndex].ready) {
+        receiveData(&clientReadyThreadHandlerArgs->gameData->playerList.players[clientReadyThreadHandlerArgs->playerIndex].socket, buffer, 1);
         if (strcmp(buffer, "ready") == 0) {
-            player->ready = 1;
+            clientReadyThreadHandlerArgs->gameData->playerList.players[clientReadyThreadHandlerArgs->playerIndex].ready = 1;
         }
     }
-    LOG(1, "%s\n", "Player is ready.");
+    LOG(1, "Player %d is ready.\n", clientReadyThreadHandlerArgs->playerIndex);
     pthread_exit(NULL);
 }
 
