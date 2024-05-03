@@ -24,7 +24,7 @@ void envoyer(socket_t *sockEch, generic quoi, pFct serial, ...) {
     }
     va_end(ap);
     if (serial == NULL) {
-        CHECK(sendto(sockEch->fd, quoi, strlen(quoi)+1, 0, (struct sockaddr *)&sockEch->addrDst, sizeof(sockEch->addrDst)), "Can't send");
+        CHECK(sendto(sockEch->fd, quoi, strlen((char *)quoi)+1, 0, (struct sockaddr *)&sockEch->addrDst, sizeof(sockEch->addrDst)), "Can't send");
     } else {
         serial(quoi, buffer);
         CHECK(sendto(sockEch->fd, buffer, strlen(buffer)+1, 0, (struct sockaddr *)&sockEch->addrDst, sizeof(sockEch->addrDst)), "Can't send");

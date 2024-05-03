@@ -55,7 +55,7 @@ void getResult(game_t *game) {
     char buffer[RESULT_WIDTH + 1] = {0};
     receiveData(&(game->socket), buffer, 4);
     for (int i = 0; i < RESULT_WIDTH; i++) {
-        game->result[game->nbRound][i] = buffer[i];
+        game->result[game->nbRound][i] = buffer[i] - '0';
     }
     printf("good place: %d\n", game->result[game->nbRound][0]);
     printf("good color: %d\n", game->result[game->nbRound][1]);
@@ -65,9 +65,10 @@ void fetchOtherClientsData(game_t *game) {
     char buffer[RESULT_WIDTH + 2];
     for (int i = 0; i < game->nbPlayers - 1; i++) {
         receiveData(&(game->socket), buffer, 5);
-        game->otherPlayers[i].nbGoodPlace = buffer[0];
-        game->otherPlayers[i].nbGoodColor = buffer[1];
-        game->otherPlayers[i].nbRound = buffer[2];
+        printf("Player %d: good place: %c, good color: %c, round: %d\n", i + 1, buffer[0], buffer[1], buffer[2] - '0');
+        game->otherPlayers[i].nbGoodPlace = buffer[0] - '0';
+        game->otherPlayers[i].nbGoodColor = buffer[1] - '0';
+        game->otherPlayers[i].nbRound = buffer[2] - '0';
     }
 }
 

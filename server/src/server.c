@@ -107,6 +107,10 @@ void *clientThreadHandler(void *args) {
     while (clientThreadHandlerArgs->gameData->playerList.players[clientThreadHandlerArgs->playerIndex].nbRound < MAX_ROUND && clientThreadHandlerArgs->gameData->gameWinner == EMPTY) {
         getPlayerChoice(clientThreadHandlerArgs->gameData, clientThreadHandlerArgs->playerIndex);
         checkChoice(clientThreadHandlerArgs->gameData, clientThreadHandlerArgs->playerIndex);
+        for (int i = 0; i < clientThreadHandlerArgs->gameData->playerList.nbPlayers; i++) {
+            printf("result : %d %d\n", clientThreadHandlerArgs->gameData->playerList.players[i].result[clientThreadHandlerArgs->gameData->playerList.players[i].nbRound][0], clientThreadHandlerArgs->gameData->playerList.players[i].result[clientThreadHandlerArgs->gameData->playerList.players[i].nbRound][1]);
+            printf("round : %d\n", clientThreadHandlerArgs->gameData->playerList.players[i].nbRound);
+        }
         sendResult(clientThreadHandlerArgs->gameData, clientThreadHandlerArgs->playerIndex);
         clientThreadHandlerArgs->gameData->playerList.players[clientThreadHandlerArgs->playerIndex].nbRound++;
     }
