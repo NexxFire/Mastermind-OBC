@@ -1,6 +1,6 @@
 # Compiler options
 CC = gcc
-CFLAGS = -Wall -Wextra -Iclient/include -IlibSocket -Iserver/include -pthread
+CFLAGS = -Wall -Wextra -Iclient/include -Iserver/include -IlibSocket -IlibUtils -pthread
 LDFLAGS = -pthread
 
 # Directories
@@ -9,6 +9,7 @@ INTER_DIR = $(BUILD_DIR)/intermediate
 CLIENT_DIR = client
 SERVER_DIR = server
 LIBSOCKET_DIR = libSocket
+LIBUTILS_DIR = libUtils
 
 # Files
 CLIENT_SRCS = $(wildcard $(CLIENT_DIR)/src/*.c)
@@ -17,8 +18,8 @@ SERVER_SRCS = $(wildcard $(SERVER_DIR)/src/*.c)
 SERVER_OBJS = $(patsubst $(SERVER_DIR)/src/%.c,$(INTER_DIR)/%.o,$(SERVER_SRCS))
 LIBSOCKET_SRCS = $(wildcard $(LIBSOCKET_DIR)/*.c)
 LIBSOCKET_OBJS = $(patsubst $(LIBSOCKET_DIR)/%.c,$(INTER_DIR)/%.o,$(LIBSOCKET_SRCS))
-LIBUTIL_SRCS = $(wildcard $(LIBUTIL_DIR)/*.c)
-LIBUTIL_OBJS = $(patsubst $(LIBUTIL_DIR)/%.c,$(INTER_DIR)/%.o,$(LIBUTIL_SRCS))
+LIBUTILS_SRCS = $(wildcard $(LIBUTILS_DIR)/*.c)
+LIBUTILS_OBJS = $(patsubst $(LIBUTILS_DIR)/%.c,$(INTER_DIR)/%.o,$(LIBUTILS_SRCS))
 
 # Executables
 CLIENT_EXECUTABLE = $(BUILD_DIR)/client
@@ -36,10 +37,10 @@ client: $(BUILD_DIR) $(CLIENT_EXECUTABLE)
 server: $(BUILD_DIR) $(SERVER_EXECUTABLE)
 	
 
-$(CLIENT_EXECUTABLE): $(CLIENT_OBJS) $(LIBSOCKET_OBJS) $(LIBUTIL_OBJS)
+$(CLIENT_EXECUTABLE): $(CLIENT_OBJS) $(LIBSOCKET_OBJS) $(LIBUTILS_OBJS)
 	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@
 
-$(SERVER_EXECUTABLE): $(SERVER_OBJS) $(LIBSOCKET_OBJS) $(LIBUTIL_OBJS)
+$(SERVER_EXECUTABLE): $(SERVER_OBJS) $(LIBSOCKET_OBJS) $(LIBUTILS_OBJS)
 	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@
 
 $(INTER_DIR)/%.o: $(CLIENT_DIR)/src/%.c
@@ -49,6 +50,9 @@ $(INTER_DIR)/%.o: $(SERVER_DIR)/src/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(INTER_DIR)/%.o: $(LIBSOCKET_DIR)/%.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(INTER_DIR)/%.o: $(LIBUTILS_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:

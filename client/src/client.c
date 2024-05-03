@@ -25,15 +25,10 @@ void sendCombination(game_t *game) {
     char colors[] = "RGBCYM"; // Possible colors
     char playerCombination[BOARD_WIDTH + 2];
     int validCombination = 0;
-    int c;
     do {
         validCombination = 1;
         printf("Player, enter your guess, possible colors are R, G, B, C, Y, and M > ");
-        fgets(playerCombination, BOARD_WIDTH + 2, stdin);
-        if (strlen(playerCombination) > 5) {
-            while ((c = getchar()) != '\n' && c != EOF);
-        }
-        playerCombination[strlen(playerCombination) - 1] = '\0';
+        getUserInput(playerCombination, sizeof(playerCombination));
         for (int i = 0; i < BOARD_WIDTH; i++) {
             playerCombination[i] = toupper(playerCombination[i]);
         }
@@ -53,14 +48,12 @@ void sendCombination(game_t *game) {
     for (int i = 0; i < BOARD_WIDTH; i++) {
         game->board[game->nbRound][i] = playerCombination[i];
     }
-
-    envoyer(&(game->socket), playerCombination, NULL);
-
+    sendData(&(game->socket), playerCombination, 3);
 }
 
 void getResult(game_t *game) {
     char buffer[RESULT_WIDTH + 1] = {0};
-    recevoir(&(game->socket), &buffer, NULL);
+    receiveData(&(game->socket), buffer, 4);
     for (int i = 0; i < RESULT_WIDTH; i++) {
         game->result[game->nbRound][i] = buffer[i];
     }
@@ -71,7 +64,7 @@ void getResult(game_t *game) {
 void fetchOtherClientsData(game_t *game) {
     char buffer[RESULT_WIDTH + 2];
     for (int i = 0; i < game->nbPlayers - 1; i++) {
-        recevoir(&(game->socket), &buffer, NULL);
+        receiveData(&(game->socket), buffer, 5);
         game->otherPlayers[i].nbGoodPlace = buffer[0];
         game->otherPlayers[i].nbGoodColor = buffer[1];
         game->otherPlayers[i].nbRound = buffer[2];
@@ -99,7 +92,7 @@ void endGame(game_t game) {
     if (game.nbRound == MAX_ROUND) {
         printf("Waiting for other players to finish the game...\n");
     }
-    recevoir(&(game.socket), &buffer, NULL);
+    receiveData(&(game.socket), buffer, 6);
     if (strcmp(buffer, "win") == 0) {
         printf("Congratulations! You won the game!\n");
     } else {
@@ -110,7 +103,7 @@ void endGame(game_t game) {
             printf("Sorry, you lost the game. The winner is player %d.\n", winner);
         }
     }
-    recevoir(&(game.socket), &buffer, NULL);
+    receiveData(&(game.socket), buffer, 7);
     printf("The secret combination was %s.\n", buffer);
 }
 

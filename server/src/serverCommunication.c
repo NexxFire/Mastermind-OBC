@@ -32,7 +32,7 @@ void clientRegistration(gameData_t *gameData) {
     LOG(1, "All players are ready.\n");
     buffer[0] = gameData->playerList.nbPlayers;
     for (int i = 0; i < gameData->playerList.nbPlayers; i++) {
-        envoyer(&gameData->playerList.players[i].socket, buffer, NULL);
+        sendData(&gameData->playerList.players[i].socket, buffer, 2);
     }
 }
 
@@ -40,7 +40,7 @@ void clientRegistration(gameData_t *gameData) {
 void getPlayerChoice(gameData_t *gameData, int playerIndex) {
     LOG(1, "Waiting for player %d to send his choice...\n", playerIndex);
     player_t *player = &gameData->playerList.players[playerIndex];
-    recevoir(&player->socket, player->board[player->nbRound], NULL);
+    receiveData(&player->socket, player->board[player->nbRound], 3);
     LOG(1, "Player %d sent his choice :%s\n", playerIndex, player->board[player->nbRound]);
 }
 
@@ -54,7 +54,7 @@ void sendResult(gameData_t *gameData, int playerIndex) {
         buffer[i] = player->result[player->nbRound][i];
     }
     buffer[RESULT_WIDTH] = '\0';
-    envoyer(&player->socket, buffer, NULL);
+    sendData(&player->socket, buffer, 4);
     LOG(1, "Result sent to player %d : good place %d, good color %d\n", playerIndex, buffer[0], buffer[1]);
     LOG(1, "Sending other players result to player %d...\n", playerIndex);
     for (int i = 0; i < gameData->playerList.nbPlayers; i++) {
@@ -64,7 +64,7 @@ void sendResult(gameData_t *gameData, int playerIndex) {
             }
             buffer[RESULT_WIDTH] = gameData->playerList.players[i].nbRound;
             buffer[RESULT_WIDTH+1] = '\0';
-            envoyer(&player->socket, buffer, NULL);
+            sendData(&player->socket, buffer, 5);
         }
     }
     LOG(1, "Other players result sent to player %d.\n", playerIndex);
@@ -105,7 +105,8 @@ void *_clientReadyThreadHandler(void *args) {
     player_t *player = (player_t *)args;
     char buffer[1024];
     while (!player->ready) {
-        recevoir(&player->socket, buffer, NULL);
+        receiveData(&player->socket, buffer, 1);
+        printf("Received: %s\n", buffer);
         if (strcmp(buffer, "ready") == 0) {
             player->ready = 1;
         }

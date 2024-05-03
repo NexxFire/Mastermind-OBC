@@ -3,6 +3,7 @@
 
 #include "socketSession.h"
 #include "socketData.h"
+#include "utils.h"
 #include "clientData.h"
 
 #define SERVER_IP "127.0.0.1"

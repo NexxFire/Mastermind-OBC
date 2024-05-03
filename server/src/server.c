@@ -16,9 +16,11 @@ int main() {
 void createCombinations(gameData_t *gameData) {
     LOG(1, "Creating secret code...\n");
     char * colors = "RGBCYM";
+    char * secretStatic = "BYRM";
     srand(time(NULL));
     for (int i = 0; i < BOARD_WIDTH; i++) {
-        gameData->secretCode[i] = colors[rand() % strlen(colors)];
+        //gameData->secretCode[i] = colors[rand() % strlen(colors)];
+        gameData->secretCode[i] = secretStatic[i];
     }
     LOG(1, "Secret code created.\n");
     LOG(1, "Secret code : ");
@@ -91,8 +93,8 @@ void endGame(gameData_t *gameData) {
         } else {
             sprintf(buffer, "loose:%d", gameData->gameWinner);
         }
-        envoyer(&gameData->playerList.players[i].socket, buffer, NULL);
-        envoyer(&gameData->playerList.players[i].socket, gameData->secretCode, NULL);
+        sendData(&gameData->playerList.players[i].socket, buffer, 6);
+        sendData(&gameData->playerList.players[i].socket, gameData->secretCode, 7);
     }
     LOG(1, "Winner is player %d.\n", gameData->gameWinner);
     LOG(1, "Result sent. Game ended.\n");

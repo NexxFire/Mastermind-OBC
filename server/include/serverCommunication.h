@@ -3,6 +3,7 @@
 
 #include "serverData.h"
 #include "socketData.h"
+#include "utils.h"
 #include "socketSession.h"
 #include <pthread.h>
 #include <unistd.h>
