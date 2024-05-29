@@ -1,5 +1,16 @@
+/**
+ *	\file		client.c
+ *	\brief		Handles the main game loop for the client.
+ *
+ *	\details	This file contains the main game loop and the functions for checking if the game is over and ending the game.
+ */
 #include "client.h"
 
+/**
+ *	\fn			int main()
+ *	\brief		The main game loop.
+ *	\details    Shows the menu, initializes the game, connects to the server, and then enters the main game loop. The main game loop consists of sending the player's combination to the server, receiving the result of the combination, fetching the data of the other players, and showing the game state. The loop continues until the game is over.    
+ */
 int main() {
     game_t game;
     showMenu();
@@ -19,39 +30,12 @@ int main() {
     return 0;
 }
 
-void sendCombination(game_t *game) {
-
-    char colors[] = "RGBCYM"; // Possible colors
-    char playerCombination[BOARD_WIDTH + 2];
-    int validCombination = 0;
-    do {
-        validCombination = 1;
-        printf("Player, enter your guess, possible colors are R, G, B, C, Y, and M > ");
-        getUserInput(playerCombination, sizeof(playerCombination));
-        for (int i = 0; i < BOARD_WIDTH; i++) {
-            playerCombination[i] = toupper(playerCombination[i]);
-        }
-        if (strlen(playerCombination) != BOARD_WIDTH) {
-            printf("Error: you must enter exactly 4 colors. Please try again.\n");
-            validCombination = 0;
-        }
-        for (int i = 0; i < BOARD_WIDTH; i++) {
-            if (strchr(colors, playerCombination[i]) == NULL) {
-                printf("Error: the color %c is not valid. Please try again.\n", playerCombination[i]);
-                validCombination = 0;
-                break;
-            }
-        }
-    } while (!validCombination);
-    
-    for (int i = 0; i < BOARD_WIDTH; i++) {
-        game->board[game->nbRound][i] = playerCombination[i];
-    }
-    sendData(&(game->socket), playerCombination, 3);
-}
-
-
-
+/**
+ *	\fn			int isGameOver(game_t game)
+ *	\brief		Checks if the game is over.
+ *	\param 		game : The game state.
+ *	\details		Returns 1 if the game is over (either the player has found the secret combination, the maximum number of rounds has been reached, or another player has found the secret combination), and 0 otherwise.
+ */
 int isGameOver(game_t game) {
     if (game.result[game.nbRound - 1][0] == BOARD_WIDTH) {
         return 1;
@@ -67,6 +51,12 @@ int isGameOver(game_t game) {
     return 0;
 }
 
+/**
+ *	\fn			void endGame(game_t game)
+ *	\brief		Ends the game.
+ *	\param 		game : The game state.
+ *	\details	Displays a message indicating whether the player has won or lost, who the winner is (if there is one), and what the secret combination was.
+ */
 void endGame(game_t game) {
     char buffer[10];
     int winner = EMPTY;

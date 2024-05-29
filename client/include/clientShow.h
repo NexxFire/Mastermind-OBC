@@ -1,3 +1,9 @@
+/**
+ *	\file		clientShow.c
+ *	\brief		Handles the display of the game state for the client.
+ *
+ *	\details	This file contains the functions necessary for displaying the game state on the client side.
+ */
 #ifndef SHOW_H
 #define SHOW_H
 
@@ -29,8 +35,27 @@
 #define ANSI_STYLE_ITALIC       "\x1b[3m"
 #define ANSI_STYLE_UNDERLINE    "\x1b[4m"
 
+/**
+ *	\fn			void showMenu()
+ *	\brief		Displays the game menu.
+ *	\details	The game menu is printed to the console.
+ */
 void showMenu();
+
+/**
+ *	\fn			void showGame(game_t game)
+ *	\brief		Displays the current game state.
+ *	\param 		game : The game state to be displayed.
+ *  \details	The game state is printed to the console with the appropriate format.
+ */
 void showGame(game_t game);
+
+/**
+ *	\fn			void showChar(char c)
+ *	\brief		Displays a character with the appropriate format.
+ *	\param 		c : The character to be displayed.
+ *	\details	The character is printed to the console with the appropriate format.
+ */
 void showChar(char c);
 
 #endif

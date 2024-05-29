@@ -1,9 +1,6 @@
 /**
  *	\file		data.h
  *	\brief		Spécification de la couche Data Representation
- *	\author		Samir El Khattabi
- *	\date		3 mars 2023
- *	\version	1.0
  */
 #ifndef DATA_H
 #define DATA_H

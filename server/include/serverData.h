@@ -23,31 +23,45 @@
 #define SERVER_PORT 58392
 
 #define LOG_LEVEL 1
+/**
+ * \def         LOG(level, fmt, ...)
+ * \brief       Logs a message to the console with a specific level.
+*/
 #define LOG(level, fmt, ...) if (level <= LOG_LEVEL) fprintf(stdout, fmt, ##__VA_ARGS__)
 
+/**
+ * \struct      player
+ * \brief       Represents a player.
+*/
 struct player
 {
-    char board[MAX_ROUND][BOARD_WIDTH];
-    char result[MAX_ROUND][RESULT_WIDTH];
-    int nbRound;
-    socket_t socket;
-    int ready;
+    char board[MAX_ROUND][BOARD_WIDTH]; /**<The player's board.*/
+    char result[MAX_ROUND][RESULT_WIDTH]; /**<The player's result.*/
+    int nbRound; /**<The number of rounds played by the player.*/
+    socket_t socket; /**<The player's socket to communicate with the client.*/
+    int ready; /**<The player's ready status.*/
 };
 typedef struct player player_t;
 
-
+/**
+ * \struct      playerList
+ * \brief       Represents a list of players.
+*/
 struct playerList
 {
-    player_t players[MAX_PLAYERS];
-    int nbPlayers;
+    player_t players[MAX_PLAYERS]; /**<The list of players.*/
+    int nbPlayers; /**<The number of players in the list.*/
 };
 typedef struct playerList playerList_t;
 
-
+/**
+ * \struct      gameData
+ * \brief       Represents the game data.
+*/
 struct gameData {
-    playerList_t playerList;
-    char secretCode[BOARD_WIDTH];
-    int gameWinner; 
+    playerList_t playerList; /**<The list of players.*/
+    char secretCode[BOARD_WIDTH]; /**<The secret code.*/
+    int gameWinner; /**<The winner of the game.*/
 };
 typedef struct gameData gameData_t;
 
