@@ -1,5 +1,5 @@
-#ifndef SERVERDATA_H
-#define SERVERDATA_H
+#ifndef SERVER_DATA_H
+#define SERVER_DATA_H
 
 
 #include "socketSession.h"

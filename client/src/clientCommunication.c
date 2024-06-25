@@ -22,14 +22,16 @@ void connexionWithServer(game_t *game) {
     int serverPort;
     char buffer[16];
 
-    printf("Entrez l'adresse IP du serveur : ");
-    getUserInput(serverIp, sizeof(serverIp));
+    mvprintw(0, 0, "Enter the server IP : ");
+    getstr(serverIp);
+    printf("serverIp : %s\n", serverIp);
     if (strcmp(serverIp, "\n") == 0) {
         strcpy(serverIp, SERVER_IP);
     }
 
-    printf("Entrez le port du serveur : ");
-    getUserInput(serverPortBuffer, sizeof(serverPortBuffer));
+    mvprintw(1, 0, "Enter the server port : ");
+    getstr(serverPortBuffer);
+    printf("serverPort : %s\n", serverPortBuffer);
     if (strcmp(serverPortBuffer, "\n") == 0) {
         serverPort = SERVER_PORT;
     } else {
@@ -38,22 +40,19 @@ void connexionWithServer(game_t *game) {
     
     game->socket = connecterClt2Srv(serverIp, serverPort);
 
-    printf("Connected to the server\n");
-    printf("type 'ready' when you are ready to play\n");
-    do {
-        getUserInput(buffer, sizeof(buffer));
-    } while (strcmp(buffer, "ready") != 0);
-    printf("You are ready to play\n");
+    mvprintw(3, 0, "You are connected to the server\n");
+    mvprintw(4, 0, "Press the validation button when you are ready to play\n");
+    while (readButton() != VALIDATION_BUTTON);
+    mvprintw(5, 0, "You are ready to play\n");
     sendData(&(game->socket), "ready", 1);
-    printf("Waiting for other players to be ready...\n");
+    mvprintw(6, 0, "Waiting for other players...\n");
     receiveData(&(game->socket), buffer, 2);
     game->nbPlayers = buffer[0];
-    printf("\nThere are %d players in the game\n", game->nbPlayers);
     receiveData(&(game->socket), buffer, 8);
     game->playerIndex = buffer[0];
-    printf("You are player %d\n", game->playerIndex +1);
-    printf("Game is starting...\n");
-    
+    char * lcdMessage = malloc(50);
+    sprintf(lcdMessage, "There are %d players in the game", game->nbPlayers);
+    displayLcd(lcdMessage);
 }
 
 /**
@@ -64,33 +63,28 @@ void connexionWithServer(game_t *game) {
  */
 void sendCombination(game_t *game) {
 
-    char colors[] = "RGBCYM"; // Possible colors
-    char playerCombination[BOARD_WIDTH + 2];
-    int validCombination = 0;
-    do {
-        validCombination = 1;
-        printf("Player, enter your guess, possible colors are R, G, B, C, Y, and M > ");
-        getUserInput(playerCombination, sizeof(playerCombination));
-        for (int i = 0; i < BOARD_WIDTH; i++) {
-            playerCombination[i] = toupper(playerCombination[i]);
-        }
-        if (strlen(playerCombination) != BOARD_WIDTH) {
-            printf("Error: you must enter exactly 4 colors. Please try again.\n");
-            validCombination = 0;
-        }
-        for (int i = 0; i < BOARD_WIDTH; i++) {
-            if (strchr(colors, playerCombination[i]) == NULL) {
-                printf("Error: the color %c is not valid. Please try again.\n", playerCombination[i]);
-                validCombination = 0;
-                break;
+    unsigned char colors[] = "RGBCYM"; // Possible colors
+    unsigned char playerCombination[BOARD_WIDTH + 1];
+    int pressedButton = -1;
+    while (pressedButton != VALIDATION_BUTTON)
+    {
+        pressedButton = readButton();
+        if (pressedButton < 4) {
+            if (playerCombination[pressedButton] == 6) {
+                playerCombination[pressedButton] = 0;
+            } else {
+                playerCombination[pressedButton]++;
             }
+            game->board[game->nbRound][pressedButton] = (int) colors[playerCombination[pressedButton]];
+            showRow(game->board[game->nbRound], game->result[game->nbRound], game->nbRound);
         }
-    } while (!validCombination);
-    
-    for (int i = 0; i < BOARD_WIDTH; i++) {
-        game->board[game->nbRound][i] = playerCombination[i];
+        if (pressedButton == HELP_BUTTON) {
+            showHelp();
+            while (readButton() != HELP_BUTTON);
+            showGame(*game);
+        }
     }
-    sendData(&(game->socket), playerCombination, 3);
+    sendData(&(game->socket), game->board[game->nbRound], 3);
 }
 
 /**

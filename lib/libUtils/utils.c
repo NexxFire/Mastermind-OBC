@@ -20,7 +20,7 @@ void getUserInput(char *buffer, size_t size) {
  * \details This function will clear the input buffer by reading all the characters until the end of the line or the end of the file.
 */
 void clearBuffer () {
-    char c;
+    int c;
     while ((c = getchar()) != '\n' && c != EOF);
 }
 
@@ -54,3 +54,4 @@ void receiveData(socket_t *socket, char *data, int validationCode) {
     sprintf(buffer, "ok:%d", validationCode);
     envoyer(socket, buffer, NULL);
 }
+

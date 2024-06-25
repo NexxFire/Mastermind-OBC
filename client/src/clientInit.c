@@ -62,4 +62,9 @@ void initGame(game_t *game) {
     _initBoard(game->board);
     _initResult(game->result);
     _initOtherPlayers(game->otherPlayers);
+    initialize_ncurses();
+    initLcd();
+    initSPI();
+    init7Segment();
+    initButton();
 }

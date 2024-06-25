@@ -4,58 +4,36 @@
  *
  *	\details	This file contains the functions necessary for displaying the game state on the client side.
  */
-#ifndef SHOW_H
-#define SHOW_H
+#ifndef CLIENT_SHOW_H
+#define CLIENT_SHOW_H
 
 #include "clientData.h" 
+#include "utils.h"
+#include "libButton.h"
+#include "libLCD.h"
+#include "libLedMatrix.h"
+#include "libSegments.h"
 #include <stdio.h> 
+#include <ncursesw/ncurses.h>
+#include <locale.h>
 
 
-#define ANSI_RESET_ALL          "\x1b[0m"
+#define HEIGHT MAX_ROUND * 2 + 1
+#define WIDTH BOARD_WIDTH * 3 + 3 + 4*2
+#define STARTX 30
+#define STARTY 1
 
-#define ANSI_COLOR_BLACK        "\x1b[30m"
-#define ANSI_COLOR_RED          "\x1b[31m"
-#define ANSI_COLOR_GREEN        "\x1b[32m"
-#define ANSI_COLOR_YELLOW       "\x1b[33m"
-#define ANSI_COLOR_BLUE         "\x1b[34m"
-#define ANSI_COLOR_MAGENTA      "\x1b[35m"
-#define ANSI_COLOR_CYAN         "\x1b[36m"
-#define ANSI_COLOR_WHITE        "\x1b[37m"
 
-#define ANSI_BACKGROUND_BLACK   "\x1b[40m"
-#define ANSI_BACKGROUND_RED     "\x1b[41m"
-#define ANSI_BACKGROUND_GREEN   "\x1b[42m"
-#define ANSI_BACKGROUND_YELLOW  "\x1b[43m"
-#define ANSI_BACKGROUND_BLUE    "\x1b[44m"
-#define ANSI_BACKGROUND_MAGENTA "\x1b[45m"
-#define ANSI_BACKGROUND_CYAN    "\x1b[46m"
-#define ANSI_BACKGROUND_WHITE   "\x1b[47m"
-
-#define ANSI_STYLE_BOLD         "\x1b[1m"
-#define ANSI_STYLE_ITALIC       "\x1b[3m"
-#define ANSI_STYLE_UNDERLINE    "\x1b[4m"
-
-/**
- *	\fn			void showMenu()
- *	\brief		Displays the game menu.
- *	\details	The game menu is printed to the console.
- */
+void initialize_ncurses();
+void finalize_ncurses();
 void showMenu();
-
-/**
- *	\fn			void showGame(game_t game)
- *	\brief		Displays the current game state.
- *	\param 		game : The game state to be displayed.
- *  \details	The game state is printed to the console with the appropriate format.
- */
+void showHelp();
 void showGame(game_t game);
+void showBoard(game_t game);
+void showRow(char row[BOARD_WIDTH], char result[RESULT_WIDTH], int round);
+void showOtherUser(int round, int goodPlace, int goodColor, int starty, int startx);
+void showChar(signed char c, int y, int x);
+void showEndGame(game_t game);
 
-/**
- *	\fn			void showChar(char c)
- *	\brief		Displays a character with the appropriate format.
- *	\param 		c : The character to be displayed.
- *	\details	The character is printed to the console with the appropriate format.
- */
-void showChar(char c);
 
 #endif

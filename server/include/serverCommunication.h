@@ -3,8 +3,8 @@
  * \brief       Contains functions for server-client communication.
  * \details     This file includes functions for client registration, receiving player choices, sending results, and handling threads for listening to clients and ensuring client readiness.
  */
-#ifndef SERVERCOMMUNICATION_H
-#define SERVERCOMMUNICATION_H
+#ifndef SERVER_COMMUNICATION_H
+#define SERVER_COMMUNICATION_H
 
 #include "serverData.h"
 #include "socketData.h"

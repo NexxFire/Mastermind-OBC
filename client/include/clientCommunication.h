@@ -5,13 +5,16 @@
  *	\details	This file contains the functions necessary for the client-side communication of the game.
  *				It includes functions for connecting to the server, receiving game results, and fetching data from other clients.
  */
-#ifndef COMMUNICATION_H
-#define COMMUNICATION_H
+#ifndef CLIENT_COMMUNICATION_H
+#define CLIENT_COMMUNICATION_H
 
 #include "socketSession.h"
 #include "socketData.h"
 #include "utils.h"
+#include "clientShow.h"
 #include "clientData.h"
+#include "libButton.h"
+#include "libLCD.h"
 #include <ctype.h>
 
 

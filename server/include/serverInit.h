@@ -3,8 +3,8 @@
  * \brief       Contains functions for server and player initialization.
  * \details     This file includes functions for initializing the game data and the player data.
  */
-#ifndef SERVERINIT_H
-#define SERVERINIT_H
+#ifndef SERVER_INIT_H
+#define SERVER_INIT_H
 
 #include "serverData.h"
 

@@ -4,10 +4,14 @@
  *
  *	\details	This file contains the functions necessary for initializing the game state on the client side.
  */
-#ifndef INIT_H
-#define INIT_H
+#ifndef CLIENT_INIT_H
+#define CLIENT_INIT_H
 
 #include "clientData.h" // client/include/clientData.h
+#include "clientShow.h" // client/include/clientShow.h
+#include "libLCD.h" // client/include/libLCD.h
+#include "libLedMatrix.h" // client/include/libLedMatrix.h
+#include "libSegments.h" // client/include/libSegments.h
 
 /**
  *	\fn			void _initBoard(char board[MAX_ROUND][BOARD_WIDTH])

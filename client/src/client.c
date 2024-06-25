@@ -13,11 +13,10 @@
  */
 int main() {
     game_t game;
-    showMenu();
     initGame(&game);
+    showMenu();
     connexionWithServer(&game);
     showGame(game); 
-
     while (!isGameOver(game)){
         sendCombination(&game);
         getResult(&game);
@@ -25,7 +24,8 @@ int main() {
         showGame(game); //show game
         game.nbRound++;
     }
-    endGame(game); //end game
+    showEndGame(game); //end game
+    finalize_ncurses();
 
     return 0;
 }
@@ -49,34 +49,6 @@ int isGameOver(game_t game) {
         }
     }
     return 0;
-}
-
-/**
- *	\fn			void endGame(game_t game)
- *	\brief		Ends the game.
- *	\param 		game : The game state.
- *	\details	Displays a message indicating whether the player has won or lost, who the winner is (if there is one), and what the secret combination was.
- */
-void endGame(game_t game) {
-    char buffer[10];
-    int winner = EMPTY;
-    if (game.nbRound == MAX_ROUND) {
-        printf("Waiting for other players to finish the game...\n");
-    }
-    printf("Waiting for other players to finish their round...\n");
-    receiveData(&(game.socket), buffer, 6);
-    if (strcmp(buffer, "win") == 0) {
-        printf("Congratulations! You won the game!\n");
-    } else {
-        sscanf(buffer, "loose:%d", &winner);
-        if (winner == EMPTY) {
-            printf("Sorry, you lost the game. Nobody found the secret combination.\n");
-        } else {
-            printf("Sorry, you lost the game. The winner is player %d.\n", winner+1);
-        }
-    }
-    receiveData(&(game.socket), buffer, 7);
-    printf("The secret combination was %s.\n", buffer);
 }
 
 

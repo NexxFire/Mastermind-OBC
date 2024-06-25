@@ -8,8 +8,8 @@
  *	\details	This file defines the data structures used by the client, including the game state and the other players' states.
  *              It also defines several constants used in the game, such as the maximum number of rounds and players, the board and result dimensions, and the color codes.
  */
-#ifndef CLIENTDATA_H
-#define CLIENTDATA_H
+#ifndef CLIENT_DATA_H
+#define CLIENT_DATA_H
 
 #include "socketSession.h"
 
