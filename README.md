@@ -3,6 +3,12 @@ A multiplayer Mastermind game with client-server architecture.
 
 
 ## Installation
+### Cross compile the project
+Run the config script to initialize all needed variable in your shell for crossed compile
+```
+source config.source
+```
+
 Run make in the root directory
 
 ```bash
@@ -10,9 +16,16 @@ make
 ```
 The server and client executables will be created in the build directory
 
+### Joy-Pi configuration
+Use any file transfert of your choice to move client and server executable to the JoyPi, You shold also include the rootRPI directory because you will need it to install all needed lib and include for the project
+
+Once you have all the file on the JoyPi, move all file from rootRPI in designated directory. On the official JoyPi image you should copy rootRPI/bin to /bin, rootRPI/lib to /lib, rootRPI/include to /usr/include, rootRPI/share to /usr/share
+
 ## How to play
 
 ### Server
+When everything is setted up, you can lanch the client and the server on one JoyPi, every other JoyPi should only launch a client
+ 
 Run the server on a machine within your accessible networks
 ```bash
 ./build/server

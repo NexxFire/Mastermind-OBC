@@ -1,4 +1,5 @@
 export envPath=$PWD
 export PATH_CC=$envPath/srcRPI/tools-master/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin
-export CCC=$PATH_CC/arm-linux-gnueabihf-gcc
-
+export CCC="$PATH_CC/arm-linux-gnueabihf-gcc -std=c11"
+export CC=$CCC
+export PREFIX=$envPath/rootRPI
