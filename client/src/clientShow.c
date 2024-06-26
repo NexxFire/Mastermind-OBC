@@ -71,6 +71,7 @@ void showHelp() {
     mvprintw(11, 0, "Use the first 4 button of the Matrix to change the color in the current row.");
     
     mvprintw(13, 0, "Press the help button again to exit the help and go back to game.");
+    refresh();
 }
 
 void showGame(game_t game) {
@@ -86,13 +87,14 @@ void showGame(game_t game) {
         }
     }
 
-    displayCharMatrix(game.playerIndex + '0');
+    displayCharMatrix(game.playerIndex + 1 + '0');
     
-    displayDigit(DIGIT_1, segment_value[0]);
-    displayDigit(DIGIT_2, segment_value[game.result[game.nbRound][0]]);
-    displayColon(COLON_ON);
-    displayDigit(DIGIT_3, segment_value[0]);
-    displayDigit(DIGIT_4, segment_value[game.result[game.nbRound][1]]);
+    if (game.nbRound > 0) {
+        displayDigit(DIGIT_1, segment_value[game.result[game.nbRound - 1][0]]);
+        displayColon(COLON_ON);
+        displayDigit(DIGIT_4, segment_value[game.result[game.nbRound - 1][1]]);    
+    }
+    
 
     refresh();
 }
@@ -126,10 +128,9 @@ void showBoard(game_t game) {
         }
     }
     refresh();
-    getch();
 }
 
-void showRow(char row[BOARD_WIDTH], char result[RESULT_WIDTH], int round) {
+void showRow(signed char row[BOARD_WIDTH], signed char result[RESULT_WIDTH], int round) {
     round = MAX_ROUND - round - 1;
     showChar(result[0], STARTY + (round)*2 + 1, STARTX + 2);
     for (int j = 0; j < BOARD_WIDTH; j++) {
@@ -204,6 +205,7 @@ void showEndGame(game_t game) {
         mvprintw(0, 0, "You found the secret combination in %d rounds!\n", game.nbRound);
         mvprintw(1, 0, "Waiting for other players to finish the game...\n");
     }
+    refresh();
     receiveData(&(game.socket), buffer, 6);
     if (strcmp(buffer, "win") == 0) {
         winner = game.playerIndex;

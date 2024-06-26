@@ -21,7 +21,7 @@ void getUserInput(char *buffer, size_t size) {
 */
 void clearBuffer () {
     int c;
-    while ((c = getchar()) != '\n' && c != EOF);
+    while ((c = getch()) != '\n' && c != EOF);
 }
 
 

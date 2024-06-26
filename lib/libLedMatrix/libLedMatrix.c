@@ -135,12 +135,15 @@ const char ascii[128][8] = {
 
 
 void initSPI() {
+    wiringPiSetup();
+    wiringPiSPISetup(SPI_CHANNEL, SPI_SPEED);
     pinMode(11, OUTPUT); // Chip Select pin (CS0)
     // Initial configuration of the matrix
     __writeSPI(0x09, 0x00); // Decode mode: no decode
     __writeSPI(0x0A, 0x03); // Intensity: 3 (range is 0 to 15)
     __writeSPI(0x0B, 0x07); // Scan limit: all 8 digits
     __writeSPI(0x0C, 0x01); // Shutdown register: normal operation
+    resetMatrix();
 }
 
 // Write a value to a register on the matrix via SPI
@@ -164,7 +167,7 @@ void __displayMatrix(const char matrix[8]) {
 }
 
 // Clear the matrix
-void clearMatrix() {
+void resetMatrix() {
     for (int i = 0; i < 8; i++) {
         __setRow(i, EMPTY_MATRIX);
     }

@@ -21,38 +21,46 @@ void connexionWithServer(game_t *game) {
     char serverPortBuffer[7];
     int serverPort;
     char buffer[16];
+    clear();
+    echo();
+    nocbreak();
 
     mvprintw(0, 0, "Enter the server IP : ");
+    refresh();
     getstr(serverIp);
-    printf("serverIp : %s\n", serverIp);
-    if (strcmp(serverIp, "\n") == 0) {
-        strcpy(serverIp, SERVER_IP);
-    }
+    if (strcmp(serverIp, "") == 0) strcpy(serverIp, SERVER_IP);  
+    else if (strcmp(serverIp, "localhost") == 0) strcpy(serverIp, "127.0.0.1");
+    //printf("serverIp : %s\n", serverIp);
 
     mvprintw(1, 0, "Enter the server port : ");
+    refresh();
     getstr(serverPortBuffer);
-    printf("serverPort : %s\n", serverPortBuffer);
-    if (strcmp(serverPortBuffer, "\n") == 0) {
-        serverPort = SERVER_PORT;
-    } else {
-        serverPort = atoi(serverPortBuffer);
-    }
-    
+    if (strcmp(serverPortBuffer, "") == 0) serverPort = SERVER_PORT;
+    else serverPort = atoi(serverPortBuffer);
+    //printf("serverPort : %d\n", serverPort);
+
     game->socket = connecterClt2Srv(serverIp, serverPort);
 
     mvprintw(3, 0, "You are connected to the server\n");
     mvprintw(4, 0, "Press the validation button when you are ready to play\n");
+    refresh();
     while (readButton() != VALIDATION_BUTTON);
+
     mvprintw(5, 0, "You are ready to play\n");
     sendData(&(game->socket), "ready", 1);
     mvprintw(6, 0, "Waiting for other players...\n");
+    refresh();
     receiveData(&(game->socket), buffer, 2);
     game->nbPlayers = buffer[0];
     receiveData(&(game->socket), buffer, 8);
     game->playerIndex = buffer[0];
+
     char * lcdMessage = malloc(50);
     sprintf(lcdMessage, "There are %d players in the game", game->nbPlayers);
     displayLcd(lcdMessage);
+    free(lcdMessage);
+    noecho();
+    cbreak();
 }
 
 /**
@@ -64,27 +72,37 @@ void connexionWithServer(game_t *game) {
 void sendCombination(game_t *game) {
 
     unsigned char colors[] = "RGBCYM"; // Possible colors
-    unsigned char playerCombination[BOARD_WIDTH + 1];
+    unsigned char playerCombination[BOARD_WIDTH + 1] = {-1, -1, -1, -1, -1};
     int pressedButton = -1;
     while (pressedButton != VALIDATION_BUTTON)
     {
         pressedButton = readButton();
         if (pressedButton < 4) {
-            if (playerCombination[pressedButton] == 6) {
+            if (playerCombination[pressedButton] == 5) {
                 playerCombination[pressedButton] = 0;
             } else {
                 playerCombination[pressedButton]++;
             }
             game->board[game->nbRound][pressedButton] = (int) colors[playerCombination[pressedButton]];
-            showRow(game->board[game->nbRound], game->result[game->nbRound], game->nbRound);
+            //showRow(game->board[game->nbRound], game->result[game->nbRound], game->nbRound);
+            showGame(*game);
         }
         if (pressedButton == HELP_BUTTON) {
             showHelp();
             while (readButton() != HELP_BUTTON);
             showGame(*game);
         }
+        if (pressedButton == VALIDATION_BUTTON) {
+            for (int i = 0; i < BOARD_WIDTH; i++) {
+                if (game->board[game->nbRound][i] == EMPTY) pressedButton = -1;
+            }
+        }
     }
-    sendData(&(game->socket), game->board[game->nbRound], 3);
+    for (int i = 0; i < BOARD_WIDTH; i++) {
+        playerCombination[i] = game->board[game->nbRound][i];
+    }
+    playerCombination[BOARD_WIDTH] = '\0';
+    sendData(&(game->socket), (char *) playerCombination, 3);
 }
 
 /**

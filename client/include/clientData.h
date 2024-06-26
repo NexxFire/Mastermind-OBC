@@ -52,8 +52,8 @@ typedef struct otherPlayer otherPlayer_t;
  */
 struct game
 {
-    char board[MAX_ROUND][BOARD_WIDTH]; /**<The game board, represented as a 2D array of characters. Each row represents a round, and each column represents a position in the color combination.*/
-    char result[MAX_ROUND][RESULT_WIDTH]; /**<result of each round, represented as a 2D array of characters. Each row represents a round, and each column represents a score (number of good places and good colors).*/
+    signed char board[MAX_ROUND][BOARD_WIDTH]; /**<The game board, represented as a 2D array of characters. Each row represents a round, and each column represents a position in the color combination.*/
+    signed char result[MAX_ROUND][RESULT_WIDTH]; /**<result of each round, represented as a 2D array of characters. Each row represents a round, and each column represents a score (number of good places and good colors).*/
     int nbRound; /**<The number of rounds played so far.*/
     otherPlayer_t otherPlayers[MAX_PLAYERS -1]; /**<The states of the other players in the game.*/
     int nbPlayers; /**<The total number of players in the game.*/

@@ -9,7 +9,7 @@ int initLcd(){
 	for(i=0;i<9;i++){
 		wiringPiI2CWriteReg8(fd,i,0xFF);
 	}
-	wiringPiSetupSys();
+	wiringPiSetup();
 	mcp23008Setup(AF_BASE,ADRESSELCD);
 	pinMode(AF_BLUE,OUTPUT);
 	lcdHandle = lcdInit(2, 17, 4, AF_RS, AF_STRB, AF_DB4,AF_DB5,AF_DB6,AF_DB7, 0,0,0,0);

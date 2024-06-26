@@ -1,7 +1,7 @@
 # Compiler options
 CC ?= gcc
 CFLAGS = -Wall -Wextra -Iclient/include -Iserver/include -Ilib/libSocket -Ilib/libUtils -Ilib/libButton -Ilib/libLCD -Ilib/libLedMatrix -Ilib/libSegments -L$(PREFIX)/lib -I$(PREFIX)/include
-LDFLAGS = -pthread
+LDFLAGS = -pthread -lncursesw
 LDFLAGS_CLIENT = -lwiringPi -lwiringPiDev -lncursesw
 PREFIX ?= /usr
 

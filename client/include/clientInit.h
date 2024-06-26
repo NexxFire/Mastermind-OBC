@@ -19,7 +19,7 @@
  *	\param 		board : The game board to be initialized.
  *	\result		The game board is filled with the EMPTY constant.
  */
-void _initBoard(char board[MAX_ROUND][BOARD_WIDTH]);
+void _initBoard(signed char board[MAX_ROUND][BOARD_WIDTH]);
 
 /**
  *	\fn			void _initResult(char result[MAX_ROUND][RESULT_WIDTH])
@@ -27,7 +27,7 @@ void _initBoard(char board[MAX_ROUND][BOARD_WIDTH]);
  *	\param 		result : The result array to be initialized.
  *	\result		The result array is filled with the EMPTY_SCORE constant.
  */
-void _initResult(char result[MAX_ROUND][RESULT_WIDTH]);
+void _initResult(signed char result[MAX_ROUND][RESULT_WIDTH]);
 
 /**
  *	\fn			void _initOtherPlayers(otherPlayer_t otherPlayers[MAX_PLAYERS-1])

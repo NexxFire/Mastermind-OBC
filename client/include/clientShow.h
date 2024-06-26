@@ -30,7 +30,7 @@ void showMenu();
 void showHelp();
 void showGame(game_t game);
 void showBoard(game_t game);
-void showRow(char row[BOARD_WIDTH], char result[RESULT_WIDTH], int round);
+void showRow(signed char row[BOARD_WIDTH], signed char result[RESULT_WIDTH], int round);
 void showOtherUser(int round, int goodPlace, int goodColor, int starty, int startx);
 void showChar(signed char c, int y, int x);
 void showEndGame(game_t game);

@@ -10,23 +10,25 @@ void initButton(){
     // Set the buttonRows as inputs and columns as outputs
     for (int i = 0; i < BUTTON_ROWS; i++) {
         pinMode(buttonRows[i], OUTPUT);
-        pullUpDnControl(buttonRows[i], PUD_UP);
+        //pullUpDnControl(buttonRows[i], PUD_UP);
         digitalWrite(buttonRows[i], HIGH);
     }
 
     for (int i = 0; i < BUTTON_COLS; i++) {
         pinMode(buttonCols[i], INPUT);
-        pullUpDnControl(buttonRows[i], PUD_UP);
+        //pullUpDnControl(buttonCols[i], PUD_UP);
     }
+
 }
 
 int readButton(){
+    
     while (1) {
         for (int i = 0; i < BUTTON_ROWS; i++) {
             digitalWrite(buttonRows[i], LOW);
             for (int j = 0; j < BUTTON_COLS; j++) {
                 if (digitalRead(buttonCols[j]) == LOW) {
-                    delay(50);
+                    delay(150);
                     digitalWrite(buttonRows[i], HIGH);
                     return i * BUTTON_COLS + j;
                 }

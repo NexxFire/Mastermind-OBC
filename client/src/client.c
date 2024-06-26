@@ -21,8 +21,8 @@ int main() {
         sendCombination(&game);
         getResult(&game);
         fetchOtherClientsData(&game);
-        showGame(game); //show game
         game.nbRound++;
+        showGame(game); //show game
     }
     showEndGame(game); //end game
     finalize_ncurses();
